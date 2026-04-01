@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .controls {
+        margin-bottom: 20px;
+      }
+      input[type='text'] {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      .output {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      canvas {
+        border: 1px solid #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>QR Code Generator</h1>
+
+    <div class="controls">
+      <input
+        type="text"
+        id="input"
+        value="https://example.com"
+        placeholder="Enter text to encode..."
+      />
+      <br /><br />
+      <button onclick="generate()">Generate</button>
+      <button onclick="downloadSVG()">Download SVG</button>
+    </div>
+
+    <div class="output">
+      <canvas id="qr-canvas"></canvas>
+      <div id="svg-container"></div>
+    </div>
+
+    <!--
+    实际使用时，通过构建工具导入：
+    import { encode, toSVG } from 'qrcode-encoder'
+
+    此处为演示方便，使用内联模块。
+  -->
+    <script type="module">
+      // 假设已通过构建工具打包，实际使用：
+      // import { encode, toSVG } from 'qrcode-encoder'
+
+      // 本地开发示例：
+      import { encode, toSVG } from '../../src/index.ts'
+
+      let lastSVG = ''
+
+      function renderToCanvas(modules) {
+        const canvas = document.getElementById('qr-canvas')
+        const ctx = canvas.getContext('2d')
+        const moduleSize = 8
+        const quietZone = 4
+        const count = modules.length
+        const size = (count + quietZone * 2) * moduleSize
+
+        canvas.width = size
+        canvas.height = size
+
+        // 白色背景
+        ctx.fillStyle = '#ffffff'
+        ctx.fillRect(0, 0, size, size)
+
+        // 绘制模块
+        ctx.fillStyle = '#000000'
+        for (let row = 0; row < count; row++) {
+          for (let col = 0; col < count; col++) {
+            if (modules[row][col]) {
+              ctx.fillRect(
+                (col + quietZone) * moduleSize,
+                (row + quietZone) * moduleSize,
+                moduleSize,
+                moduleSize
+              )
+            }
+          }
+        }
+      }
+
+      window.generate = function () {
+        const text = document.getElementById('input').value
+        if (!text) return
+
+        const modules = encode(text)
+        renderToCanvas(modules)
+
+        lastSVG = toSVG(modules, { moduleSize: 8 })
+        document.getElementById('svg-container').innerHTML = lastSVG
+      }
+
+      window.downloadSVG = function () {
+        if (!lastSVG) {
+          window.generate()
+        }
+        const blob = new Blob([lastSVG], { type: 'image/svg+xml' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'qrcode.svg'
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+
+      // 初始生成
+      window.generate()
+    </script>
+  </body>
+</html>
