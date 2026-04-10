@@ -124,7 +124,7 @@ export function encode(text: string, options?: QRCodeOptions): boolean[][] {
   reserveInfoAreas(isFunction, size, version)
 
   // 编码数据
-  const codewords = encodeDataBits(text, version)
+  const codewords = encodeDataBits(dataBytes, version)
 
   // 放置数据位
   placeDataBits(modules, isFunction, codewords, size)

@@ -4,11 +4,9 @@
 
 import { VERSION_EC_TABLE } from './constants'
 import { rsEncode } from './reed-solomon'
-import { textToBytes } from './utf8'
 
 /** 编码数据并返回交织后的码字数组 */
-export function encodeDataBits(text: string, version: number): number[] {
-  const dataBytes = textToBytes(text)
+export function encodeDataBits(dataBytes: number[], version: number): number[] {
   const ecInfo = VERSION_EC_TABLE[version]
 
   let totalDataCodewords = 0
@@ -18,7 +16,7 @@ export function encodeDataBits(text: string, version: number): number[] {
 
   const totalBlocks = ecInfo.groups.reduce((s, g) => s + g.count, 0)
   const totalEcCodewords = ecInfo.totalCodewords - totalDataCodewords
-  const ecPerBlock = Math.round(totalEcCodewords / totalBlocks)
+  const ecPerBlock = (totalEcCodewords / totalBlocks) | 0
 
   // 构建位流
   const bits: number[] = []
