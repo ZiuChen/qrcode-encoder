@@ -7,6 +7,11 @@
   "license": "MIT",
   "exports": {
     ".": "./dist/index.mjs",
+    "./encoder": "./dist/encoder/index.mjs",
+    "./renderers/canvas": "./dist/renderers/canvas.mjs",
+    "./renderers/png": "./dist/renderers/png.mjs",
+    "./renderers/svg": "./dist/renderers/svg.mjs",
+    "./renderers/terminal": "./dist/renderers/terminal.mjs",
     "./package.json": "./package.json"
   },
   "files": [

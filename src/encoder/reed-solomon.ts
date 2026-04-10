@@ -4,8 +4,12 @@
 
 import { GF_EXP, gfMul } from './galois-field'
 
-/** 生成 RS 生成多项式 */
+const _generatorPolyCache = new Map<number, number[]>()
+
+/** 生成 RS 生成多项式（自动缓存结果） */
 export function rsGeneratorPoly(degree: number): number[] {
+  const cached = _generatorPolyCache.get(degree)
+  if (cached) return cached
   let gen = [1]
   for (let i = 0; i < degree; i++) {
     const newGen = new Array<number>(gen.length + 1).fill(0)
@@ -15,6 +19,7 @@ export function rsGeneratorPoly(degree: number): number[] {
     }
     gen = newGen
   }
+  _generatorPolyCache.set(degree, gen)
   return gen
 }
 

@@ -17,6 +17,8 @@ export interface PngOptions {
   foreground?: [number, number, number]
   /** 背景色 RGB，默认 [255, 255, 255]（白色） */
   background?: [number, number, number]
+  /** 是否透明背景（忽略 background），默认 false */
+  transparent?: boolean
 }
 
 // ===== CRC32 =====
@@ -147,12 +149,51 @@ export function toPng(modules: boolean[][], options?: PngOptions): Uint8Array {
     moduleSize = 4,
     quietZone = 4,
     foreground = [0, 0, 0],
-    background = [255, 255, 255]
+    background = [255, 255, 255],
+    transparent = false
   } = options ?? {}
 
   const count = modules.length
   const width = (count + quietZone * 2) * moduleSize
   const height = width
+
+  if (transparent) {
+    // RGBA 模式：背景像素 alpha=0，前景 alpha=255
+    const rowBytes = 1 + width * 4
+    const rawData = new Uint8Array(rowBytes * height)
+
+    for (let py = 0; py < height; py++) {
+      const rowOffset = py * rowBytes
+      rawData[rowOffset] = 0 // Filter: None
+
+      for (let px = 0; px < width; px++) {
+        const moduleRow = Math.floor(py / moduleSize) - quietZone
+        const moduleCol = Math.floor(px / moduleSize) - quietZone
+
+        const isDark =
+          moduleRow >= 0 &&
+          moduleRow < count &&
+          moduleCol >= 0 &&
+          moduleCol < count &&
+          modules[moduleRow][moduleCol]
+
+        const idx = rowOffset + 1 + px * 4
+        if (isDark) {
+          rawData[idx] = foreground[0]
+          rawData[idx + 1] = foreground[1]
+          rawData[idx + 2] = foreground[2]
+          rawData[idx + 3] = 255
+        } else {
+          rawData[idx] = 0
+          rawData[idx + 1] = 0
+          rawData[idx + 2] = 0
+          rawData[idx + 3] = 0
+        }
+      }
+    }
+
+    return _buildPng(deflateUncompressed(rawData), width, height, 6 /* RGBA */)
+  }
 
   // Build raw pixel data (RGB, no alpha for smaller size)
   // Each row: 1 filter byte + width * 3 RGB bytes
@@ -185,7 +226,15 @@ export function toPng(modules: boolean[][], options?: PngOptions): Uint8Array {
   // Compress with uncompressed DEFLATE
   const compressed = deflateUncompressed(rawData)
 
-  // Build PNG file
+  return _buildPng(compressed, width, height, 2 /* RGB */)
+}
+
+function _buildPng(
+  compressed: Uint8Array,
+  width: number,
+  height: number,
+  colorType: number
+): Uint8Array {
   const PNG_SIGNATURE = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])
 
   // IHDR
@@ -193,7 +242,7 @@ export function toPng(modules: boolean[][], options?: PngOptions): Uint8Array {
   writeU32BE(ihdrData, 0, width)
   writeU32BE(ihdrData, 4, height)
   ihdrData[8] = 8 // bit depth
-  ihdrData[9] = 2 // color type: RGB
+  ihdrData[9] = colorType // color type (2=RGB, 6=RGBA)
   ihdrData[10] = 0 // compression
   ihdrData[11] = 0 // filter
   ihdrData[12] = 0 // interlace
