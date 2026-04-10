@@ -30,7 +30,7 @@ export interface CanvasLike {
 }
 
 export interface CanvasRenderingContext2DLike {
-  fillStyle: string | CanvasGradient | CanvasPattern
+  fillStyle: string
   fillRect(x: number, y: number, w: number, h: number): void
   clearRect(x: number, y: number, w: number, h: number): void
 }

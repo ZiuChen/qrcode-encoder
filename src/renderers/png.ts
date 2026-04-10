@@ -61,11 +61,6 @@ function writeU32BE(buf: Uint8Array, offset: number, value: number): void {
   buf[offset + 3] = value & 0xff
 }
 
-function writeU16BE(buf: Uint8Array, offset: number, value: number): void {
-  buf[offset] = (value >>> 8) & 0xff
-  buf[offset + 1] = value & 0xff
-}
-
 function writeU16LE(buf: Uint8Array, offset: number, value: number): void {
   buf[offset] = value & 0xff
   buf[offset + 1] = (value >>> 8) & 0xff
