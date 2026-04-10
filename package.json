@@ -12,6 +12,14 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "qr-code",
+    "encoder",
+    "svg",
+    "terminal",
+    "typescript",
+    "wechat-mini-program"
+  ],
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
@@ -28,5 +36,17 @@
     "tsdown": "^0.21.3",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ZiuChen/qrcode-encoder.git"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
