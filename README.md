@@ -135,6 +135,19 @@ import QRCode from './QRCode.vue'
 </script>
 ```
 
+## Compatibility
+
+The library is distributed as native ESM (`.mjs`) with no transpilation of modern syntax, so the minimum supported runtimes are determined by `??` / `?.` operator support.
+
+| Runtime | Minimum Version |
+|---|---|
+| Node.js | **≥ 14.0** |
+| Chrome / Edge | **≥ 80** |
+| Firefox | **≥ 72** |
+| Safari | **≥ 13.1** |
+
+> **`toCanvas`** requires an external Canvas object (e.g. `HTMLCanvasElement`, `OffscreenCanvas`, WeChat Mini Program canvas, `node-canvas`) — the browser Canvas API itself is not bundled.
+
 ## Architecture
 
 ```

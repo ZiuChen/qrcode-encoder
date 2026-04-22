@@ -50,8 +50,5 @@
     "type": "git",
     "url": "git@github.com:ZiuChen/qrcode-encoder.git"
   },
-  "engines": {
-    "node": ">=24"
-  },
   "packageManager": "pnpm@10.33.0"
 }

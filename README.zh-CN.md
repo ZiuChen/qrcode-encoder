@@ -133,6 +133,19 @@ import QRCode from './QRCode.vue'
 </script>
 ```
 
+## 兼容性
+
+产物为原生 ESM（`.mjs`），未对现代语法做降级转译，最低运行时版本由 `??` / `?.` 算子决定。
+
+| 运行时 | 最低版本 |
+|---|---|
+| Node.js | **≥ 14.0** |
+| Chrome / Edge | **≥ 80** |
+| Firefox | **≥ 72** |
+| Safari | **≥ 13.1** |
+
+> **`toCanvas`** 需要在外部传入 Canvas 对象（如 `HTMLCanvasElement`、`OffscreenCanvas`、微信小程序 canvas、`node-canvas`），库本身不内置浏览器 Canvas API。
+
 ## 架构
 
 ```
