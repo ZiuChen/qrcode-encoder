@@ -8,7 +8,7 @@
 export type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H'
 
 export interface QRCodeOptions {
-  /** 纠错级别，默认 'M'（当前仅支持 M） */
+  /** 纠错级别，默认 'M'；L 容量最大，H 纠错能力最强 */
   errorCorrection?: ErrorCorrectionLevel
   /** 最小版本（1-40），默认自动选择最小可用版本 */
   minVersion?: number

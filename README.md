@@ -1,6 +1,6 @@
 # qrcode-encoder
 
-Zero-dependency QR Code encoder — pure algorithm implementation (ISO/IEC 18004), supporting V1–V40, ECC-M, and Byte mode.
+Zero-dependency QR Code encoder — pure algorithm implementation (ISO/IEC 18004), supporting V1–V40, all four ECC levels (L/M/Q/H), and Byte mode.
 
 Built-in SVG, PNG, Canvas, and terminal renderers. Works in any JavaScript environment: Node.js, browser, WeChat Mini Program, React Native, and more.
 
@@ -10,6 +10,16 @@ Built-in SVG, PNG, Canvas, and terminal renderers. Works in any JavaScript envir
 
 ```bash
 pnpm add qrcode-encoder
+```
+
+Or use the IIFE build directly in a browser via CDN — no bundler required:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/qrcode-encoder/dist/iife/qrcode-encoder.iife.js"></script>
+<script>
+  const { encode, toSVG } = QRCodeEncoder
+  document.body.innerHTML = toSVG(encode('https://example.com'))
+</script>
 ```
 
 ## Core API
@@ -41,7 +51,7 @@ console.log(toTerminal(modules))
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `text` | `string` | QR Code content |
-| `options.errorCorrection` | `'L' \| 'M' \| 'Q' \| 'H'` | Error correction level (currently only `'M'` is supported) |
+| `options.errorCorrection` | `'L' \| 'M' \| 'Q' \| 'H'` | Error correction level, default `'M'`. Use `'L'` for maximum capacity (up to 2953 bytes at V40), `'H'` for highest fault tolerance |
 | `options.minVersion` | `number` | Minimum version 1–40; auto-selected by default |
 
 ### `toSVG(modules, options?)`
@@ -175,7 +185,7 @@ src/
 
 ```bash
 pnpm install
-pnpm run test     # Run tests (70 cases)
+pnpm run test     # Run tests (106 cases)
 pnpm run build    # Build
 pnpm run dev      # Dev mode
 ```

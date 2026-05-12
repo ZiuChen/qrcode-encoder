@@ -1,6 +1,6 @@
 # qrcode-encoder
 
-零依赖的 QR Code 编码器，纯算法实现（ISO/IEC 18004），支持 V1-V40、ECC-M、Byte 模式。
+零依赖的 QR Code 编码器，纯算法实现（ISO/IEC 18004），支持 V1-V40、全部四个 ECC 级别（L/M/Q/H）、Byte 模式。
 
 内置 SVG、PNG、Canvas 和终端渲染器，可在任意 JavaScript 环境中使用（Node.js、浏览器、微信小程序、React Native 等）。
 
@@ -8,6 +8,16 @@
 
 ```bash
 pnpm add qrcode-encoder
+```
+
+也可以通过 CDN 在浏览器中直接使用 IIFE 构建，无需打包工具：
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/qrcode-encoder/dist/iife/qrcode-encoder.iife.js"></script>
+<script>
+  const { encode, toSVG } = QRCodeEncoder
+  document.body.innerHTML = toSVG(encode('https://example.com'))
+</script>
 ```
 
 ## 核心 API
@@ -39,7 +49,7 @@ console.log(toTerminal(modules))
 | 参数 | 类型 | 说明 |
 |------|------|------|
 | `text` | `string` | 二维码内容 |
-| `options.errorCorrection` | `'L' \| 'M' \| 'Q' \| 'H'` | 纠错级别（当前仅支持 `'M'`） |
+| `options.errorCorrection` | `'L' \| 'M' \| 'Q' \| 'H'` | 纠错级别，默认 `'M'`。用 `'L'` 可最大化容量（V40 最多 2953 字节），用 `'H'` 可获得最强纠错能力 |
 | `options.minVersion` | `number` | 最小版本号 1-40，默认自动选择 |
 
 ### `toSVG(modules, options?)`
@@ -173,7 +183,7 @@ src/
 
 ```bash
 pnpm install
-pnpm run test     # 运行测试（70 个用例）
+pnpm run test     # 运行测试（106 个用例）
 pnpm run build    # 构建
 pnpm run dev      # 开发模式
 ```

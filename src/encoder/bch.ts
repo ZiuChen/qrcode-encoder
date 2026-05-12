@@ -2,9 +2,19 @@
  * BCH 编码：格式信息与版本信息
  */
 
-/** BCH(15,5) 格式信息编码 */
-export function computeFormatBits(mask: number): number {
-  const data = (0b00 << 3) | mask // ECC-M = 0b00
+import type { ErrorCorrectionLevel } from './types'
+
+/** 各 ECC 等级对应的 2-bit 指示符 (ISO 18004 Table 10) */
+const EC_INDICATOR: Record<ErrorCorrectionLevel, number> = {
+  M: 0b00,
+  L: 0b01,
+  H: 0b10,
+  Q: 0b11
+}
+
+/** BCH(15,5) 格式信息编码，默认 ECC-M */
+export function computeFormatBits(mask: number, ec: ErrorCorrectionLevel = 'M'): number {
+  const data = (EC_INDICATOR[ec] << 3) | mask
   let remainder = data << 10
   for (let i = 4; i >= 0; i--) {
     if ((remainder >> (i + 10)) & 1) {

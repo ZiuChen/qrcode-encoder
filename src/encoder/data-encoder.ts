@@ -2,12 +2,17 @@
  * 数据编码：位流构建 + 多块交织
  */
 
-import { VERSION_EC_TABLE } from './constants'
+import { VERSION_EC_TABLES } from './constants'
 import { rsEncode } from './reed-solomon'
+import type { ErrorCorrectionLevel } from './types'
 
 /** 编码数据并返回交织后的码字数组 */
-export function encodeDataBits(dataBytes: number[], version: number): number[] {
-  const ecInfo = VERSION_EC_TABLE[version]
+export function encodeDataBits(
+  dataBytes: number[],
+  version: number,
+  ec: ErrorCorrectionLevel = 'M'
+): number[] {
+  const ecInfo = VERSION_EC_TABLES[ec][version]
 
   let totalDataCodewords = 0
   for (const g of ecInfo.groups) {

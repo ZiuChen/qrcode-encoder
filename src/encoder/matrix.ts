@@ -8,7 +8,7 @@
  */
 
 import { computeFormatBits, computeVersionBits } from './bch'
-import { MAX_PAYLOAD_BYTES } from './constants'
+import { getMaxPayloadBytes } from './constants'
 import { encodeDataBits } from './data-encoder'
 import { evaluatePenalty, MASK_FUNCTIONS } from './mask'
 import {
@@ -18,15 +18,19 @@ import {
   placeTimingPatterns,
   reserveInfoAreas
 } from './patterns'
-import type { QRCodeOptions } from './types'
+import type { ErrorCorrectionLevel, QRCodeOptions } from './types'
 import { textToBytes } from './utf8'
 
 /** 根据数据长度选择最小版本 */
-function getMinVersion(byteLength: number, minVersion: number = 1): number {
+function getMinVersion(
+  byteLength: number,
+  ec: ErrorCorrectionLevel,
+  minVersion: number = 1
+): number {
   for (let v = minVersion; v <= 40; v++) {
-    if (byteLength <= MAX_PAYLOAD_BYTES[v]) return v
+    if (byteLength <= getMaxPayloadBytes(ec, v)) return v
   }
-  throw new Error('Data too long, maximum supported is Version 40')
+  throw new Error(`Data too long, maximum supported is Version 40 with ECC-${ec}`)
 }
 
 /** 数据位放置（Z字形扫描） */
@@ -66,8 +70,13 @@ function placeDataBits(
 }
 
 /** 格式信息放置 */
-function writeFormatBits(modules: boolean[][], size: number, mask: number): void {
-  const bits = computeFormatBits(mask)
+function writeFormatBits(
+  modules: boolean[][],
+  size: number,
+  mask: number,
+  ec: ErrorCorrectionLevel
+): void {
+  const bits = computeFormatBits(mask, ec)
 
   const getBit = (i: number): boolean => ((bits >>> i) & 1) === 1
 
@@ -102,8 +111,9 @@ function writeVersionBits(modules: boolean[][], size: number, version: number): 
  * @returns boolean[][] 其中 true = 黑色, false = 白色
  */
 export function encode(text: string, options?: QRCodeOptions): boolean[][] {
+  const ec: ErrorCorrectionLevel = options?.errorCorrection ?? 'M'
   const dataBytes = textToBytes(text)
-  const version = getMinVersion(dataBytes.length, options?.minVersion)
+  const version = getMinVersion(dataBytes.length, ec, options?.minVersion)
   const size = version * 4 + 17
 
   // 初始化矩阵
@@ -124,7 +134,7 @@ export function encode(text: string, options?: QRCodeOptions): boolean[][] {
   reserveInfoAreas(isFunction, size, version)
 
   // 编码数据
-  const codewords = encodeDataBits(dataBytes, version)
+  const codewords = encodeDataBits(dataBytes, version, ec)
 
   // 放置数据位
   placeDataBits(modules, isFunction, codewords, size)
@@ -145,7 +155,7 @@ export function encode(text: string, options?: QRCodeOptions): boolean[][] {
         test[r][c] = val
       }
     }
-    writeFormatBits(test, size, mask)
+    writeFormatBits(test, size, mask, ec)
     if (version >= 7) writeVersionBits(test, size, version)
 
     const score = evaluatePenalty(test, size)
@@ -166,7 +176,7 @@ export function encode(text: string, options?: QRCodeOptions): boolean[][] {
   }
 
   // 写入格式和版本信息
-  writeFormatBits(modules as boolean[][], size, bestMask)
+  writeFormatBits(modules as boolean[][], size, bestMask, ec)
   if (version >= 7) {
     writeVersionBits(modules as boolean[][], size, version)
   }
