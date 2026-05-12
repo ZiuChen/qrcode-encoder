@@ -1,7 +1,7 @@
 {
   "name": "qrcode-encoder",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Zero-dependency QR Code encoder with SVG and terminal renderers.",
   "author": "ZiuChen",
   "license": "MIT",
