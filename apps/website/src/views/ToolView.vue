@@ -18,6 +18,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useHistory } from '@/composables/useHistory'
 import type { QRRecord } from '@/lib/history'
 import { DEFAULT_QR_OPTIONS, copyPngToClipboard, copyTextToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
@@ -88,7 +89,7 @@ async function onClear(): Promise<void> {
 </script>
 
 <template>
-  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_440px]">
+  <div class="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_440px]">
     <div class="flex flex-col gap-6">
       <Card>
         <CardHeader>
@@ -120,7 +121,7 @@ async function onClear(): Promise<void> {
           <Textarea
             v-model="text"
             :placeholder="t('tool.editor.placeholder')"
-            class="min-h-24 font-mono text-sm"
+            class="min-h-24 wrap-anywhere font-mono text-sm"
           />
           <QROptionsForm v-model="options" />
         </CardContent>
@@ -149,34 +150,43 @@ async function onClear(): Promise<void> {
       <CardContent>
         <Separator class="mb-2" />
         <ScrollArea class="h-[min(560px,60vh)] lg:h-[560px] pr-3">
-          <div v-if="!historyCount" class="flex h-32 items-center justify-center text-sm text-muted-foreground">
-            {{ t('tool.history.empty') }}
-          </div>
-          <ul v-else class="flex flex-col gap-2">
-            <li
-              v-for="record in records"
-              :key="record.id"
-              class="group flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent data-[active=true]:border-primary"
-              :data-active="record.id === activeId"
-              @click="applyRecord(record)"
-            >
-              <p class="min-w-0 flex-1 line-clamp-3 overflow-hidden break-all font-mono text-xs">
+          <TooltipProvider>
+            <div v-if="!historyCount" class="flex h-32 items-center justify-center text-sm text-muted-foreground">
+              {{ t('tool.history.empty') }}
+            </div>
+            <ul v-else class="flex flex-col gap-2">
+            <Tooltip v-for="record in records" :key="record.id">
+              <TooltipTrigger as-child>
+                <li
+                  class="group flex cursor-pointer flex-col gap-1.5 rounded-lg border p-3 transition-colors hover:bg-accent data-[active=true]:border-primary"
+                  :data-active="record.id === activeId"
+                  @click="applyRecord(record)"
+                >
+                  <p class="line-clamp-3 overflow-hidden break-all font-mono text-xs">
+                    {{ record.text }}
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-muted-foreground">
+                      {{ formatTime(record.updatedAt) }}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      class="size-7 p-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                      :aria-label="t('tool.history.deleteRecord')"
+                      @click.stop="remove(record.id)"
+                    >
+                      <Trash2 class="size-3.5" />
+                    </Button>
+                  </div>
+                </li>
+              </TooltipTrigger>
+              <TooltipContent class="max-w-72 break-all font-mono text-xs">
                 {{ record.text }}
-              </p>
-              <span class="shrink-0 text-[11px] text-muted-foreground">
-                {{ formatTime(record.updatedAt) }}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                class="size-7 shrink-0 p-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                :aria-label="t('tool.history.deleteRecord')"
-                @click.stop="remove(record.id)"
-              >
-                <Trash2 class="size-3.5" />
-              </Button>
-            </li>
+              </TooltipContent>
+            </Tooltip>
           </ul>
+          </TooltipProvider>
         </ScrollArea>
       </CardContent>
     </Card>

@@ -87,7 +87,7 @@ const dataUrl = toPngDataURL(modules, { moduleSize: 4 })`
           <CardDescription>{{ t('demo.playground.description') }}</CardDescription>
         </CardHeader>
         <CardContent class="flex flex-col gap-4">
-          <Textarea v-model="text" class="min-h-20 font-mono text-sm" />
+          <Textarea v-model="text" class="min-h-20 wrap-anywhere font-mono text-sm" />
           <QROptionsForm v-model="options" />
         </CardContent>
       </Card>

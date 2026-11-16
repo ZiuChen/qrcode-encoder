@@ -11,9 +11,7 @@ export default defineConfig([
       'src/renderers/svg.ts',
       'src/renderers/terminal.ts'
     ],
-    dts: {
-      tsgo: true
-    },
+    dts: {},
     sourcemap: true,
     exports: true
   },

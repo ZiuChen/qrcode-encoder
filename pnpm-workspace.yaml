@@ -43,3 +43,6 @@ allowBuilds:
   utf8-validate: false
   vue-demi: false
   workerd: false
+permissions:
+  tsdown:
+    skills: false
