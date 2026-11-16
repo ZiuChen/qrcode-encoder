@@ -86,7 +86,6 @@
       "empty": "No records yet. Generated codes appear here automatically",
       "clear": "Clear",
       "clearConfirm": "Clear all history records?",
-      "meta": "{ecc} · {moduleSize}px · quiet {quietZone} · {time}",
       "deleteRecord": "Delete record"
     },
     "toast": {

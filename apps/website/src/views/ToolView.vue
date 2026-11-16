@@ -20,7 +20,7 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { useHistory } from '@/composables/useHistory'
 import type { QRRecord } from '@/lib/history'
-import { DEFAULT_QR_OPTIONS, buildSVG, copyPngToClipboard, copyTextToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
+import { DEFAULT_QR_OPTIONS, copyPngToClipboard, copyTextToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
 
 const { records, refresh, upsert, remove, clear } = useHistory()
 const { t } = useI18n()
@@ -58,11 +58,6 @@ function applyRecord(record: QRRecord): void {
   activeId.value = record.id
 }
 
-/** 历史列表缩略图：小尺寸静态渲染，不使用当前预览参数 */
-function miniSvg(record: QRRecord): string {
-  return buildSVG(record.text, { ...record.options, moduleSize: 1, quietZone: 2 })
-}
-
 async function onCopyImage(): Promise<void> {
   if (!text.value.trim()) return
   const copied = await copyPngToClipboard(text.value, { ...options })
@@ -93,7 +88,7 @@ async function onClear(): Promise<void> {
 </script>
 
 <template>
-  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_440px]">
     <div class="flex flex-col gap-6">
       <Card>
         <CardHeader>
@@ -153,7 +148,7 @@ async function onClear(): Promise<void> {
       </CardHeader>
       <CardContent>
         <Separator class="mb-2" />
-        <ScrollArea class="h-[560px] pr-3">
+        <ScrollArea class="h-[min(560px,60vh)] lg:h-[560px] pr-3">
           <div v-if="!historyCount" class="flex h-32 items-center justify-center text-sm text-muted-foreground">
             {{ t('tool.history.empty') }}
           </div>
@@ -161,25 +156,16 @@ async function onClear(): Promise<void> {
             <li
               v-for="record in records"
               :key="record.id"
-              class="group flex cursor-pointer items-center gap-3 rounded-lg border p-2 transition-colors hover:bg-accent data-[active=true]:border-primary"
+              class="group flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent data-[active=true]:border-primary"
               :data-active="record.id === activeId"
               @click="applyRecord(record)"
             >
-              <div
-                class="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-white p-0.5 [&_svg]:h-auto [&_svg]:w-full"
-                v-html="miniSvg(record)"
-              />
-              <div class="min-w-0 flex-1">
-                <p class="truncate font-mono text-xs">{{ record.text }}</p>
-                <p class="mt-1 text-[11px] text-muted-foreground">
-                  {{ t('tool.history.meta', {
-                    ecc: record.options.ecc,
-                    moduleSize: record.options.moduleSize,
-                    quietZone: record.options.quietZone,
-                    time: formatTime(record.updatedAt),
-                  }) }}
-                </p>
-              </div>
+              <p class="min-w-0 flex-1 line-clamp-3 overflow-hidden break-all font-mono text-xs">
+                {{ record.text }}
+              </p>
+              <span class="shrink-0 text-[11px] text-muted-foreground">
+                {{ formatTime(record.updatedAt) }}
+              </span>
               <Button
                 variant="ghost"
                 size="sm"

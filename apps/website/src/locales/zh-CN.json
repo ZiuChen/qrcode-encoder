@@ -86,7 +86,6 @@
       "empty": "暂无记录，生成后会自动出现在这里",
       "clear": "清空",
       "clearConfirm": "确定清空全部历史记录？",
-      "meta": "{ecc} · {moduleSize}px · 静默 {quietZone} · {time}",
       "deleteRecord": "删除记录"
     },
     "toast": {
