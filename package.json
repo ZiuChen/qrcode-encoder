@@ -1,55 +1,26 @@
 {
-  "name": "qrcode-encoder",
+  "name": "qrcode-encoder-monorepo",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "version": "1.3.0",
-  "description": "Zero-dependency QR Code encoder with SVG and terminal renderers.",
-  "author": "ZiuChen",
-  "license": "MIT",
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./encoder": "./dist/encoder/index.mjs",
-    "./renderers/canvas": "./dist/renderers/canvas.mjs",
-    "./renderers/png": "./dist/renderers/png.mjs",
-    "./renderers/svg": "./dist/renderers/svg.mjs",
-    "./renderers/terminal": "./dist/renderers/terminal.mjs",
-    "./package.json": "./package.json"
-  },
-  "browser": "./dist/iife/qrcode-encoder.iife.js",
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "qr-code",
-    "encoder",
-    "svg",
-    "terminal",
-    "typescript",
-    "wechat-mini-program"
-  ],
+  "packageManager": "pnpm@12.21.0",
   "scripts": {
-    "build": "tsdown",
-    "dev": "tsdown --watch",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit",
-    "release": "bumpp",
-    "prepublishOnly": "pnpm run build"
+    "dev": "pnpm --filter website run dev",
+    "build": "pnpm --filter qrcode-encoder run build && pnpm --filter website run build",
+    "test": "pnpm --filter qrcode-encoder run test",
+    "typecheck": "pnpm --filter qrcode-encoder run typecheck"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@typescript/native-preview": "7.0.0-dev.20260316.1",
-    "bumpp": "^11.0.1",
-    "jsqr": "^1.4.0",
-    "tsdown": "^0.21.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "vite-plus": "catalog:"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.21.0",
+      "onFail": "download"
+    }
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:ZiuChen/qrcode-encoder.git"
-  },
-  "packageManager": "pnpm@10.33.0"
+  "engines": {
+    "node": ">=22.18.0"
+  }
 }

@@ -29,10 +29,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Build library
+        run: pnpm --filter qrcode-encoder run build
 
       - name: Publish to npm with provenance
-        run: pnpm publish --provenance --access public --no-git-checks
+        run: pnpm --filter qrcode-encoder publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
