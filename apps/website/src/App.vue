@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import logoUrl from '@/assets/logo.svg?url'
 import GithubIcon from '@/components/icons/GithubIcon.vue'
 import LanguageDropdown from '@/components/LanguageDropdown.vue'
 import { Toaster } from '@/components/ui/sonner'
@@ -13,7 +14,7 @@ const { t } = useI18n()
       <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div class="flex items-center gap-6">
           <RouterLink to="/" class="flex items-center gap-2 font-semibold tracking-tight">
-            <span class="inline-block size-5 rounded-[4px] bg-foreground" />
+            <img :src="logoUrl" alt="QRCode Encoder logo" class="size-6" />
             QRCode Encoder
           </RouterLink>
           <nav class="flex items-center gap-1 text-sm">

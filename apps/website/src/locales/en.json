@@ -68,6 +68,7 @@
       "placeholder": "https://example.com"
     },
     "options": {
+      "advanced": "Advanced settings",
       "ecc": "Error correction",
       "moduleSize": "Module size",
       "quietZone": "Quiet zone",

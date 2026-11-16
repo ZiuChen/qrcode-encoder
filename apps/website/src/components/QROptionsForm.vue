@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { ErrorCorrectionLevel } from 'qrcode-encoder'
+import { ChevronDown, Settings2 } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 import type { QRRenderOptions } from '@/lib/qr'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -17,6 +19,9 @@ const { t } = useI18n()
 
 const options = defineModel<QRRenderOptions>({ required: true })
 
+/** 高级参数默认隐藏，点击按钮切换显隐 */
+const expanded = ref(false)
+
 const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' | 'q' | 'h' }>>(() => [
   { value: 'L', key: 'l' },
   { value: 'M', key: 'm' },
@@ -26,7 +31,20 @@ const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' 
 </script>
 
 <template>
-  <div class="grid gap-4 sm:grid-cols-3">
+  <div class="flex flex-col gap-4">
+    <Button
+      variant="ghost"
+      size="sm"
+      class="h-7 w-fit gap-1.5 px-2 text-xs text-muted-foreground"
+      :aria-expanded="expanded"
+      @click="expanded = !expanded"
+    >
+      <Settings2 class="size-3.5" />
+      {{ t('tool.options.advanced') }}
+      <ChevronDown class="size-3.5 transition-transform" :class="expanded ? 'rotate-180' : ''" />
+    </Button>
+
+    <div v-if="expanded" class="grid gap-4 sm:grid-cols-3">
     <div class="flex flex-col gap-2">
       <Label class="text-xs text-muted-foreground">{{ t('tool.options.ecc') }}</Label>
       <Select v-model="options.ecc">
@@ -67,6 +85,7 @@ const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' 
         :step="1"
         @update:model-value="options.quietZone = $event?.[0] ?? options.quietZone"
       />
+    </div>
     </div>
   </div>
 </template>

@@ -68,6 +68,7 @@
       "placeholder": "https://example.com"
     },
     "options": {
+      "advanced": "高级设置",
       "ecc": "纠错级别",
       "moduleSize": "模块大小",
       "quietZone": "静默区",
