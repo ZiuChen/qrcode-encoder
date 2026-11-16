@@ -24,6 +24,7 @@
     "qrcode-encoder": "catalog:",
     "reka-ui": "catalog:",
     "vue": "catalog:",
+    "vue-i18n": "catalog:",
     "vue-router": "catalog:",
     "vue-sonner": "catalog:"
   }

@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "demo": "Demo",
+    "tool": "二维码工具",
+    "github": "GitHub 仓库"
+  },
+  "language": {
+    "label": "语言",
+    "en": "English",
+    "zh": "简体中文"
+  },
+  "footer": {
+    "tagline": "零依赖二维码编码器",
+    "license": "MIT 许可证"
+  },
+  "demo": {
+    "badge": "v1.3.0 · 零依赖",
+    "subtitle": "零依赖的二维码编码器，内置 SVG / Canvas / PNG / Terminal 渲染器，并附带一个带历史记录的在线二维码工具。",
+    "openTool": "打开二维码工具",
+    "github": "GitHub",
+    "playground": {
+      "title": "在线体验",
+      "description": "修改内容与参数，右侧即时渲染"
+    },
+    "svgOutput": {
+      "title": "SVG 输出",
+      "description": "toSVG(modules, options) 的渲染结果"
+    },
+    "featuresTitle": "特性",
+    "features": {
+      "zeroDep": {
+        "title": "零运行时依赖",
+        "description": "编码与 SVG / Canvas / PNG 渲染全部为纯算法实现，无任何运行时依赖，支持浏览器、Node.js、微信小程序等环境。"
+      },
+      "renderers": {
+        "title": "四种渲染器",
+        "description": "SVG（矢量）、Canvas（跨平台位图）、PNG（纯算法编码 Uint8Array）、Terminal（终端输出）开箱即用。"
+      },
+      "ecc": {
+        "title": "可调纠错级别",
+        "description": "支持 L / M / Q / H 四级纠错，可指定最小版本，编码结果对相同参数完全确定。"
+      },
+      "typescript": {
+        "title": "TypeScript 编写",
+        "description": "完整类型定义与子路径导出（encoder / renderers），tree-shaking 友好，IIFE 构建可直接用于 script 标签。"
+      }
+    },
+    "quickStart": {
+      "title": "快速上手",
+      "tryTool": "需要生成带历史记录的二维码？试试",
+      "toolLink": "二维码工具"
+    }
+  },
+  "tool": {
+    "preview": {
+      "title": "渲染结果",
+      "description": "实时预览，参数与内容变更后自动保存到历史",
+      "empty": "输入内容后即时预览"
+    },
+    "actions": {
+      "copyImage": "复制图片",
+      "download": "下载 PNG",
+      "copyText": "复制内容"
+    },
+    "editor": {
+      "title": "内容与参数",
+      "description": "粘贴任意文本或 URL，支持纠错级别 L / M / Q / H",
+      "placeholder": "https://example.com"
+    },
+    "options": {
+      "ecc": "纠错级别",
+      "moduleSize": "模块大小",
+      "quietZone": "静默区",
+      "modules": "模块",
+      "eccLevels": {
+        "l": "L · 容量最大",
+        "m": "M · 均衡",
+        "q": "Q · 纠错 25%",
+        "h": "H · 纠错 30%"
+      }
+    },
+    "history": {
+      "title": "历史记录",
+      "description": "点击回溯，内容与参数一并还原",
+      "empty": "暂无记录，生成后会自动出现在这里",
+      "clear": "清空",
+      "clearConfirm": "确定清空全部历史记录？",
+      "meta": "{ecc} · {moduleSize}px · 静默 {quietZone} · {time}",
+      "deleteRecord": "删除记录"
+    },
+    "toast": {
+      "imageCopied": "二维码图片已复制到剪贴板",
+      "copyFallback": "当前环境不支持复制图片，已改为下载 PNG",
+      "textCopied": "内容已复制",
+      "cleared": "历史记录已清空"
+    }
+  }
+}

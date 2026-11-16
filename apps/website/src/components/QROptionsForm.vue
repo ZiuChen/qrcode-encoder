@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { ErrorCorrectionLevel } from 'qrcode-encoder'
+import { useI18n } from 'vue-i18n'
 import type { QRRenderOptions } from '@/lib/qr'
 import { Label } from '@/components/ui/label'
 import {
@@ -11,27 +13,29 @@ import {
 } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 
+const { t } = useI18n()
+
 const options = defineModel<QRRenderOptions>({ required: true })
 
-const ECC_LEVELS: Array<{ value: ErrorCorrectionLevel; label: string; hint: string }> = [
-  { value: 'L', label: 'L', hint: '容量最大' },
-  { value: 'M', label: 'M', hint: '均衡' },
-  { value: 'Q', label: 'Q', hint: '纠错 25%' },
-  { value: 'H', label: 'H', hint: '纠错 30%' },
-]
+const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' | 'q' | 'h' }>>(() => [
+  { value: 'L', key: 'l' },
+  { value: 'M', key: 'm' },
+  { value: 'Q', key: 'q' },
+  { value: 'H', key: 'h' },
+])
 </script>
 
 <template>
   <div class="grid gap-4 sm:grid-cols-3">
     <div class="flex flex-col gap-2">
-      <Label class="text-xs text-muted-foreground">纠错级别</Label>
+      <Label class="text-xs text-muted-foreground">{{ t('tool.options.ecc') }}</Label>
       <Select v-model="options.ecc">
         <SelectTrigger class="w-full">
-          <SelectValue placeholder="纠错级别" />
+          <SelectValue :placeholder="t('tool.options.ecc')" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem v-for="level in ECC_LEVELS" :key="level.value" :value="level.value">
-            {{ level.label }} · {{ level.hint }}
+            {{ t(`tool.options.eccLevels.${level.key}`) }}
           </SelectItem>
         </SelectContent>
       </Select>
@@ -39,7 +43,8 @@ const ECC_LEVELS: Array<{ value: ErrorCorrectionLevel; label: string; hint: stri
 
     <div class="flex flex-col gap-2">
       <Label class="flex justify-between text-xs text-muted-foreground">
-        模块大小 <span class="text-foreground">{{ options.moduleSize }}px</span>
+        {{ t('tool.options.moduleSize') }}
+        <span class="text-foreground">{{ options.moduleSize }}px</span>
       </Label>
       <Slider
         :model-value="[options.moduleSize]"
@@ -52,7 +57,8 @@ const ECC_LEVELS: Array<{ value: ErrorCorrectionLevel; label: string; hint: stri
 
     <div class="flex flex-col gap-2">
       <Label class="flex justify-between text-xs text-muted-foreground">
-        静默区 <span class="text-foreground">{{ options.quietZone }} 模块</span>
+        {{ t('tool.options.quietZone') }}
+        <span class="text-foreground">{{ options.quietZone }} {{ t('tool.options.modules') }}</span>
       </Label>
       <Slider
         :model-value="[options.quietZone]"

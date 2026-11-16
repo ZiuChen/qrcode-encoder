@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "demo": "Demo",
+    "tool": "QR Tool",
+    "github": "GitHub repository"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "zh": "简体中文"
+  },
+  "footer": {
+    "tagline": "Zero-dependency QR Code encoder",
+    "license": "MIT License"
+  },
+  "demo": {
+    "badge": "v1.3.0 · zero-dependency",
+    "subtitle": "A zero-dependency QR Code encoder with built-in SVG / Canvas / PNG / Terminal renderers, plus an online QR tool with history.",
+    "openTool": "Open QR Tool",
+    "github": "GitHub",
+    "playground": {
+      "title": "Live Playground",
+      "description": "Edit content and options, rendered instantly on the right"
+    },
+    "svgOutput": {
+      "title": "SVG Output",
+      "description": "Result of toSVG(modules, options)"
+    },
+    "featuresTitle": "Features",
+    "features": {
+      "zeroDep": {
+        "title": "Zero runtime dependencies",
+        "description": "Encoding and SVG / Canvas / PNG rendering are pure algorithms with no runtime dependencies. Works in browsers, Node.js, WeChat Mini Programs and more."
+      },
+      "renderers": {
+        "title": "Four renderers",
+        "description": "SVG (vector), Canvas (cross-platform bitmap), PNG (pure-algorithm Uint8Array) and Terminal output, ready out of the box."
+      },
+      "ecc": {
+        "title": "Adjustable error correction",
+        "description": "Supports L / M / Q / H error correction levels with a configurable minimum version. Encoding is fully deterministic for identical parameters."
+      },
+      "typescript": {
+        "title": "Written in TypeScript",
+        "description": "Complete type definitions and subpath exports (encoder / renderers), tree-shaking friendly, with an IIFE build for script tags."
+      }
+    },
+    "quickStart": {
+      "title": "Quick Start",
+      "tryTool": "Need QR codes with history? Try the",
+      "toolLink": "QR tool"
+    }
+  },
+  "tool": {
+    "preview": {
+      "title": "Rendered Result",
+      "description": "Live preview. Changes are auto-saved to history",
+      "empty": "Enter content to preview instantly"
+    },
+    "actions": {
+      "copyImage": "Copy image",
+      "download": "Download PNG",
+      "copyText": "Copy content"
+    },
+    "editor": {
+      "title": "Content & Options",
+      "description": "Paste any text or URL. Error correction levels L / M / Q / H supported",
+      "placeholder": "https://example.com"
+    },
+    "options": {
+      "ecc": "Error correction",
+      "moduleSize": "Module size",
+      "quietZone": "Quiet zone",
+      "modules": "modules",
+      "eccLevels": {
+        "l": "L · max capacity",
+        "m": "M · balanced",
+        "q": "Q · 25% recovery",
+        "h": "H · 30% recovery"
+      }
+    },
+    "history": {
+      "title": "History",
+      "description": "Click a record to restore its content and options",
+      "empty": "No records yet. Generated codes appear here automatically",
+      "clear": "Clear",
+      "clearConfirm": "Clear all history records?",
+      "meta": "{ecc} · {moduleSize}px · quiet {quietZone} · {time}",
+      "deleteRecord": "Delete record"
+    },
+    "toast": {
+      "imageCopied": "QR image copied to clipboard",
+      "copyFallback": "Image copy is not supported here, PNG downloaded instead",
+      "textCopied": "Content copied",
+      "cleared": "History cleared"
+    }
+  }
+}

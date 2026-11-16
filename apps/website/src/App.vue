@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { Toaster } from '@/components/ui/sonner'
+import { useI18n } from 'vue-i18n'
 import GithubIcon from '@/components/icons/GithubIcon.vue'
+import LanguageDropdown from '@/components/LanguageDropdown.vue'
+import { Toaster } from '@/components/ui/sonner'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -18,18 +22,20 @@ import GithubIcon from '@/components/icons/GithubIcon.vue'
               class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               exact-active-class="!bg-accent !text-foreground"
             >
-              Demo
+              {{ t('nav.demo') }}
             </RouterLink>
             <RouterLink
               to="/tool"
               class="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               active-class="!bg-accent !text-foreground"
             >
-              二维码工具
+              {{ t('nav.tool') }}
             </RouterLink>
           </nav>
         </div>
-        <a
+        <div class="flex items-center gap-1">
+          <LanguageDropdown />
+          <a
           href="https://github.com/ZiuChen/qrcode-encoder"
           target="_blank"
           rel="noreferrer"
@@ -38,6 +44,7 @@ import GithubIcon from '@/components/icons/GithubIcon.vue'
         >
           <GithubIcon class="size-4" />
         </a>
+        </div>
       </div>
     </header>
 
@@ -46,7 +53,7 @@ import GithubIcon from '@/components/icons/GithubIcon.vue'
     </main>
 
     <footer class="mx-auto max-w-6xl px-4 pb-8 text-center text-xs text-muted-foreground">
-      Zero-dependency QR Code encoder ·
+      {{ t('footer.tagline') }} ·
       <a
         href="https://www.npmjs.com/package/qrcode-encoder"
         target="_blank"
@@ -55,9 +62,9 @@ import GithubIcon from '@/components/icons/GithubIcon.vue'
       >
         npm
       </a>
-      · MIT License
+      · {{ t('footer.license') }}
     </footer>
 
-    <Toaster />
+    <Toaster theme="system" />
   </div>
 </template>

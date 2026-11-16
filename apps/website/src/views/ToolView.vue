@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { toast } from 'vue-sonner'
 import { Copy, Download, Link2, Trash2 } from '@lucide/vue'
+import { useI18n } from 'vue-i18n'
+import { toast } from 'vue-sonner'
 import QROptionsForm from '@/components/QROptionsForm.vue'
 import QRPreview from '@/components/QRPreview.vue'
 import { Badge } from '@/components/ui/badge'
@@ -22,6 +23,7 @@ import type { QRRecord } from '@/lib/history'
 import { DEFAULT_QR_OPTIONS, buildSVG, copyPngToClipboard, copyTextToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
 
 const { records, refresh, upsert, remove, clear } = useHistory()
+const { t } = useI18n()
 
 const text = ref('')
 const options = reactive<QRRenderOptions>({ ...DEFAULT_QR_OPTIONS })
@@ -65,10 +67,10 @@ async function onCopyImage(): Promise<void> {
   if (!text.value.trim()) return
   const copied = await copyPngToClipboard(text.value, { ...options })
   if (copied) {
-    toast.success('二维码图片已复制到剪贴板')
+    toast.success(t('tool.toast.imageCopied'))
   } else {
     downloadPng(text.value, { ...options })
-    toast.warning('当前环境不支持复制图片，已改为下载 PNG')
+    toast.warning(t('tool.toast.copyFallback'))
   }
 }
 
@@ -79,14 +81,14 @@ function onDownload(): void {
 
 async function onCopyText(): Promise<void> {
   if (!text.value.trim()) return
-  if (await copyTextToClipboard(text.value)) toast.success('内容已复制')
+  if (await copyTextToClipboard(text.value)) toast.success(t('tool.toast.textCopied'))
 }
 
 async function onClear(): Promise<void> {
   if (!historyCount.value) return
-  if (!window.confirm('确定清空全部历史记录？')) return
+  if (!window.confirm(t('tool.history.clearConfirm'))) return
   await clear()
-  toast.success('历史记录已清空')
+  toast.success(t('tool.toast.cleared'))
 }
 </script>
 
@@ -95,20 +97,20 @@ async function onClear(): Promise<void> {
     <div class="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>渲染结果</CardTitle>
-          <CardDescription>实时预览，参数与内容变更后自动保存到历史</CardDescription>
+          <CardTitle>{{ t('tool.preview.title') }}</CardTitle>
+          <CardDescription>{{ t('tool.preview.description') }}</CardDescription>
         </CardHeader>
         <CardContent class="flex flex-col gap-4">
           <QRPreview :text="text" :options="options" />
           <div class="flex flex-wrap gap-2">
             <Button @click="onCopyImage">
-              <Copy /> 复制图片
+              <Copy /> {{ t('tool.actions.copyImage') }}
             </Button>
             <Button variant="outline" @click="onDownload">
-              <Download /> 下载 PNG
+              <Download /> {{ t('tool.actions.download') }}
             </Button>
             <Button variant="outline" @click="onCopyText">
-              <Link2 /> 复制内容
+              <Link2 /> {{ t('tool.actions.copyText') }}
             </Button>
           </div>
         </CardContent>
@@ -116,13 +118,13 @@ async function onClear(): Promise<void> {
 
       <Card>
         <CardHeader>
-          <CardTitle>内容与参数</CardTitle>
-          <CardDescription>粘贴任意文本或 URL，支持的纠错级别 L / M / Q / H</CardDescription>
+          <CardTitle>{{ t('tool.editor.title') }}</CardTitle>
+          <CardDescription>{{ t('tool.editor.description') }}</CardDescription>
         </CardHeader>
         <CardContent class="flex flex-col gap-4">
           <Textarea
             v-model="text"
-            placeholder="https://example.com"
+            :placeholder="t('tool.editor.placeholder')"
             class="min-h-24 font-mono text-sm"
           />
           <QROptionsForm v-model="options" />
@@ -133,11 +135,11 @@ async function onClear(): Promise<void> {
     <Card class="lg:sticky lg:top-20">
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
-          历史记录
+          {{ t('tool.history.title') }}
           <Badge variant="secondary">{{ historyCount }}</Badge>
         </CardTitle>
         <CardDescription class="flex items-center justify-between">
-          <span>点击回溯，内容与参数一并还原</span>
+          <span>{{ t('tool.history.description') }}</span>
           <Button
             variant="ghost"
             size="sm"
@@ -145,7 +147,7 @@ async function onClear(): Promise<void> {
             :disabled="!historyCount"
             @click="onClear"
           >
-            <Trash2 class="size-3.5" /> 清空
+            <Trash2 class="size-3.5" /> {{ t('tool.history.clear') }}
           </Button>
         </CardDescription>
       </CardHeader>
@@ -153,7 +155,7 @@ async function onClear(): Promise<void> {
         <Separator class="mb-2" />
         <ScrollArea class="h-[560px] pr-3">
           <div v-if="!historyCount" class="flex h-32 items-center justify-center text-sm text-muted-foreground">
-            暂无记录，生成后会自动出现在这里
+            {{ t('tool.history.empty') }}
           </div>
           <ul v-else class="flex flex-col gap-2">
             <li
@@ -170,15 +172,19 @@ async function onClear(): Promise<void> {
               <div class="min-w-0 flex-1">
                 <p class="truncate font-mono text-xs">{{ record.text }}</p>
                 <p class="mt-1 text-[11px] text-muted-foreground">
-                  {{ record.options.ecc }} · {{ record.options.moduleSize }}px · 静默 {{ record.options.quietZone }}
-                  · {{ formatTime(record.updatedAt) }}
+                  {{ t('tool.history.meta', {
+                    ecc: record.options.ecc,
+                    moduleSize: record.options.moduleSize,
+                    quietZone: record.options.quietZone,
+                    time: formatTime(record.updatedAt),
+                  }) }}
                 </p>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 class="size-7 shrink-0 p-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                aria-label="删除记录"
+                :aria-label="t('tool.history.deleteRecord')"
                 @click.stop="remove(record.id)"
               >
                 <Trash2 class="size-3.5" />

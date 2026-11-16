@@ -1,7 +1,22 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // 跟随系统深浅色偏好，渲染前同步 class 避免 FOUC
+      ;(() => {
+        const sync = () => {
+          document.documentElement.classList.toggle(
+            'dark',
+            window.matchMedia('(prefers-color-scheme: dark)').matches,
+          )
+        }
+        sync()
+        window
+          .matchMedia('(prefers-color-scheme: dark)')
+          .addEventListener('change', sync)
+      })()
+    </script>
     <link
       rel="icon"
       type="image/svg+xml"
