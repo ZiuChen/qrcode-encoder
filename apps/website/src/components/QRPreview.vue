@@ -20,7 +20,7 @@ const svg = computed(() => buildSVG(props.text, props.options))
     否则浅色模块与深色画布会降低可扫性。
   -->
   <div
-    class="flex min-h-48 flex items-center justify-center rounded-lg border border-border/60 bg-white p-4 shadow-sm [&_svg]:h-auto [&_svg]:max-h-[420px] [&_svg]:w-full [&_svg]:max-w-[420px]"
+    class="flex min-h-48 flex items-center justify-center rounded-lg bg-white p-4 shadow-sm [&_svg]:h-auto [&_svg]:max-h-[420px] [&_svg]:w-full [&_svg]:max-w-[420px]"
   >
     <div v-if="svg" class="flex w-full justify-center" v-html="svg" />
     <p v-else class="text-sm text-neutral-400">{{ t('tool.preview.empty') }}</p>

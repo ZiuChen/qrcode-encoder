@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useHistory } from '@/composables/useHistory'
@@ -135,7 +134,6 @@ async function onClear(): Promise<void> {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Separator class="mb-2" />
         <ScrollArea class="h-[min(560px,60vh)] lg:h-[560px] pr-3">
           <TooltipProvider>
             <div v-if="!historyCount" class="flex h-32 items-center justify-center text-sm text-muted-foreground">
