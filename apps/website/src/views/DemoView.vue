@@ -88,7 +88,7 @@ const dataUrl = toPngDataURL(modules, { moduleSize: 4 })`
         </CardHeader>
         <CardContent class="flex flex-col gap-4">
           <Textarea v-model="text" class="min-h-20 wrap-anywhere font-mono text-sm" />
-          <QROptionsForm v-model="options" />
+          <QROptionsForm v-model="options" :collapsible="false" />
         </CardContent>
       </Card>
       <Card>

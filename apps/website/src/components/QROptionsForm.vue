@@ -19,7 +19,9 @@ const { t } = useI18n()
 
 const options = defineModel<QRRenderOptions>({ required: true })
 
-/** 高级参数默认隐藏，点击按钮切换显隐 */
+/** 高级参数默认隐藏，点击按钮切换显隐；demo 页传 :collapsible="false" 常驻展开 */
+withDefaults(defineProps<{ collapsible?: boolean }>(), { collapsible: true })
+
 const expanded = ref(false)
 
 const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' | 'q' | 'h' }>>(() => [
@@ -33,6 +35,7 @@ const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' 
 <template>
   <div class="flex flex-col gap-4">
     <Button
+      v-if="collapsible"
       variant="ghost"
       size="sm"
       class="h-7 w-fit gap-1.5 px-2 text-xs text-muted-foreground"
@@ -44,7 +47,7 @@ const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' 
       <ChevronDown class="size-3.5 transition-transform" :class="expanded ? 'rotate-180' : ''" />
     </Button>
 
-    <div v-if="expanded" class="grid gap-4 sm:grid-cols-3">
+    <div v-if="expanded || !collapsible" class="grid gap-4 sm:grid-cols-3">
     <div class="flex flex-col gap-2">
       <Label class="text-xs text-muted-foreground">{{ t('tool.options.ecc') }}</Label>
       <Select v-model="options.ecc">
