@@ -57,15 +57,6 @@ export async function copyPngToClipboard(text: string, options: QRRenderOptions)
   }
 }
 
-export async function copyTextToClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text)
-    return true
-  } catch {
-    return false
-  }
-}
-
 export function downloadPng(text: string, options: QRRenderOptions): void {
   buildPngBlob(text, options).then((blob) => {
     const url = URL.createObjectURL(blob)

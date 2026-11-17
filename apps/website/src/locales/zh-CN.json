@@ -55,12 +55,8 @@
     "preview": {
       "title": "渲染结果",
       "description": "实时预览，参数与内容变更后自动保存到历史",
-      "empty": "输入内容后即时预览"
-    },
-    "actions": {
-      "copyImage": "复制图片",
-      "download": "下载 PNG",
-      "copyText": "复制内容"
+      "empty": "输入内容后即时预览",
+      "clickHint": "点击二维码复制图片"
     },
     "editor": {
       "title": "内容与参数",
@@ -91,7 +87,6 @@
     "toast": {
       "imageCopied": "二维码图片已复制到剪贴板",
       "copyFallback": "当前环境不支持复制图片，已改为下载 PNG",
-      "textCopied": "内容已复制",
       "cleared": "历史记录已清空"
     }
   }

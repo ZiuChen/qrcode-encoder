@@ -55,12 +55,8 @@
     "preview": {
       "title": "Rendered Result",
       "description": "Live preview. Changes are auto-saved to history",
-      "empty": "Enter content to preview instantly"
-    },
-    "actions": {
-      "copyImage": "Copy image",
-      "download": "Download PNG",
-      "copyText": "Copy content"
+      "empty": "Enter content to preview instantly",
+      "clickHint": "Click the QR code to copy the image"
     },
     "editor": {
       "title": "Content & Options",
@@ -91,7 +87,6 @@
     "toast": {
       "imageCopied": "QR image copied to clipboard",
       "copyFallback": "Image copy is not supported here, PNG downloaded instead",
-      "textCopied": "Content copied",
       "cleared": "History cleared"
     }
   }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { Copy, Download, Link2, Trash2 } from '@lucide/vue'
+import { Trash2 } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import QROptionsForm from '@/components/QROptionsForm.vue'
@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useHistory } from '@/composables/useHistory'
 import type { QRRecord } from '@/lib/history'
-import { DEFAULT_QR_OPTIONS, copyPngToClipboard, copyTextToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
+import { DEFAULT_QR_OPTIONS, copyPngToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
 
 const { records, refresh, upsert, remove, clear } = useHistory()
 const { t } = useI18n()
@@ -70,16 +70,6 @@ async function onCopyImage(): Promise<void> {
   }
 }
 
-function onDownload(): void {
-  if (!text.value.trim()) return
-  downloadPng(text.value, { ...options })
-}
-
-async function onCopyText(): Promise<void> {
-  if (!text.value.trim()) return
-  if (await copyTextToClipboard(text.value)) toast.success(t('tool.toast.textCopied'))
-}
-
 async function onClear(): Promise<void> {
   if (!historyCount.value) return
   if (!window.confirm(t('tool.history.clearConfirm'))) return
@@ -97,18 +87,15 @@ async function onClear(): Promise<void> {
           <CardDescription>{{ t('tool.preview.description') }}</CardDescription>
         </CardHeader>
         <CardContent class="flex flex-col gap-4">
-          <QRPreview :text="text" :options="options" />
-          <div class="flex flex-wrap gap-2">
-            <Button @click="onCopyImage">
-              <Copy /> {{ t('tool.actions.copyImage') }}
-            </Button>
-            <Button variant="outline" @click="onDownload">
-              <Download /> {{ t('tool.actions.download') }}
-            </Button>
-            <Button variant="outline" @click="onCopyText">
-              <Link2 /> {{ t('tool.actions.copyText') }}
-            </Button>
-          </div>
+          <QRPreview
+            class="cursor-pointer"
+            :text="text"
+            :options="options"
+            role="button"
+            :aria-label="t('tool.preview.clickHint')"
+            @click="onCopyImage"
+          />
+          <p class="text-center text-xs text-muted-foreground">{{ t('tool.preview.clickHint') }}</p>
         </CardContent>
       </Card>
 
