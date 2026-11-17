@@ -181,7 +181,8 @@ async function onClear(): Promise<void> {
                   </div>
                 </li>
               </TooltipTrigger>
-              <TooltipContent class="max-w-72 break-all font-mono text-xs">
+              <!-- break-all 在 popper shrink-to-fit 上下文里会产生行尾大片空白，改用 wrap-anywhere -->
+              <TooltipContent class="max-w-72 wrap-anywhere font-mono text-xs">
                 {{ record.text }}
               </TooltipContent>
             </Tooltip>
