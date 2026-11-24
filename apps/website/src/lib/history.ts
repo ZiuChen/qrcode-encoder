@@ -26,7 +26,7 @@ const STORE_NAME = 'history'
 export const MAX_RECORDS = 500
 
 /** 对内容与参数做 FNV-1a 32 位哈希，得到稳定 id */
-function computeId(text: string, options: QRRenderOptions): string {
+export function computeRecordId(text: string, options: QRRenderOptions): string {
   const key = `${text}\u0000${options.ecc}\u0000${options.moduleSize}\u0000${options.quietZone}`
   let hash = 0x811c9dc5
   for (let i = 0; i < key.length; i++) {
@@ -42,7 +42,7 @@ export function createRecord(
   now = Date.now(),
 ): QRRecord {
   return {
-    id: computeId(text, options),
+    id: computeRecordId(text, options),
     text,
     options,
     createdAt: now,

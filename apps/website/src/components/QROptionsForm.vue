@@ -34,18 +34,23 @@ const ECC_LEVELS = computed<Array<{ value: ErrorCorrectionLevel; key: 'l' | 'm' 
 
 <template>
   <div class="flex flex-col gap-4">
-    <Button
-      v-if="collapsible"
-      variant="ghost"
-      size="sm"
-      class="h-7 w-fit gap-1.5 px-2 text-xs text-muted-foreground"
-      :aria-expanded="expanded"
-      @click="expanded = !expanded"
-    >
-      <Settings2 class="size-3.5" />
-      {{ t('tool.options.advanced') }}
-      <ChevronDown class="size-3.5 transition-transform" :class="expanded ? 'rotate-180' : ''" />
-    </Button>
+    <div v-if="collapsible || $slots.actions" class="flex items-center justify-between gap-2">
+      <Button
+        v-if="collapsible"
+        variant="ghost"
+        size="sm"
+        class="h-7 w-fit gap-1.5 px-2 text-xs text-muted-foreground"
+        :aria-expanded="expanded"
+        @click="expanded = !expanded"
+      >
+        <Settings2 class="size-3.5" />
+        {{ t('tool.options.advanced') }}
+        <ChevronDown class="size-3.5 transition-transform" :class="expanded ? 'rotate-180' : ''" />
+      </Button>
+      <div v-if="$slots.actions" class="ml-auto">
+        <slot name="actions" />
+      </div>
+    </div>
 
     <div v-if="expanded || !collapsible" class="grid gap-4 sm:grid-cols-3">
     <div class="flex flex-col gap-2">

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
-import { Trash2 } from '@lucide/vue'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { Check, Save, Trash2 } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
+import HighlightedUrlText from '@/components/HighlightedUrlText.vue'
 import QROptionsForm from '@/components/QROptionsForm.vue'
 import QRPreview from '@/components/QRPreview.vue'
 import { Badge } from '@/components/ui/badge'
@@ -19,7 +20,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useHistory } from '@/composables/useHistory'
-import type { QRRecord } from '@/lib/history'
+import { computeRecordId, type QRRecord } from '@/lib/history'
 import { DEFAULT_QR_OPTIONS, copyPngToClipboard, downloadPng, type QRRenderOptions } from '@/lib/qr'
 
 const { records, refresh, upsert, remove, clear } = useHistory()
@@ -27,17 +28,31 @@ const { t } = useI18n()
 
 const text = ref('')
 const options = reactive<QRRenderOptions>({ ...DEFAULT_QR_OPTIONS })
-const activeId = ref<string | null>(null)
 
 onMounted(refresh)
 
-const save = useDebounceFn(async () => {
-  if (!text.value.trim()) return
-  await upsert(text.value, { ...options })
-  activeId.value = null
-}, 1200)
+/** 当前内容与参数对应的历史记录 id，内容或参数一变就变 */
+const currentId = computed(() => computeRecordId(text.value, { ...options }))
+const savedRecord = computed(() => records.value.find(record => record.id === currentId.value))
+const hasUnsavedChanges = computed(() => !!text.value.trim() && !savedRecord.value)
 
-watch([text, () => ({ ...options })], () => save())
+async function onSave(): Promise<void> {
+  if (!hasUnsavedChanges.value) return
+  await upsert(text.value, { ...options })
+}
+
+useEventListener(window, 'keydown', (event: KeyboardEvent) => {
+  if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return
+  if (event.key.toLowerCase() !== 's') return
+  event.preventDefault()
+  void onSave()
+})
+
+useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
+  if (!hasUnsavedChanges.value) return
+  event.preventDefault()
+  event.returnValue = ''
+})
 
 const historyCount = computed(() => records.value.length)
 
@@ -55,7 +70,6 @@ function formatTime(timestamp: number): string {
 function applyRecord(record: QRRecord): void {
   text.value = record.text
   Object.assign(options, record.options)
-  activeId.value = record.id
 }
 
 async function onCopyImage(): Promise<void> {
@@ -109,7 +123,15 @@ async function onClear(): Promise<void> {
             :placeholder="t('tool.editor.placeholder')"
             class="min-h-24 wrap-anywhere font-mono text-sm"
           />
-          <QROptionsForm v-model="options" />
+          <QROptionsForm v-model="options">
+            <template #actions>
+              <Button :disabled="!hasUnsavedChanges" class="gap-1.5" @click="onSave">
+                <Check v-if="savedRecord" class="size-4" />
+                <Save v-else class="size-4" />
+                {{ savedRecord ? t('tool.editor.saved') : t('tool.editor.save') }}
+              </Button>
+            </template>
+          </QROptionsForm>
         </CardContent>
       </Card>
     </div>
@@ -144,11 +166,11 @@ async function onClear(): Promise<void> {
               <TooltipTrigger as-child>
                 <li
                   class="group flex cursor-pointer flex-col gap-1.5 rounded-lg border p-3 transition-colors hover:bg-accent data-[active=true]:border-primary"
-                  :data-active="record.id === activeId"
+                  :data-active="record.id === currentId"
                   @click="applyRecord(record)"
                 >
                   <p class="line-clamp-3 overflow-hidden break-all font-mono text-xs">
-                    {{ record.text }}
+                    <HighlightedUrlText :text="record.text" />
                   </p>
                   <div class="flex items-center justify-between">
                     <span class="text-[11px] text-muted-foreground">
@@ -168,7 +190,7 @@ async function onClear(): Promise<void> {
               </TooltipTrigger>
               <!-- break-all 在 popper shrink-to-fit 上下文里会产生行尾大片空白，改用 wrap-anywhere -->
               <TooltipContent class="max-w-72 wrap-anywhere font-mono text-xs">
-                {{ record.text }}
+                <HighlightedUrlText :text="record.text" />
               </TooltipContent>
             </Tooltip>
           </ul>

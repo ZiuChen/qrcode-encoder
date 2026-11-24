@@ -54,14 +54,16 @@
   "tool": {
     "preview": {
       "title": "渲染结果",
-      "description": "实时预览，参数与内容变更后自动保存到历史",
+      "description": "实时预览，点击保存后写入历史",
       "empty": "输入内容后即时预览",
       "clickHint": "点击二维码复制图片"
     },
     "editor": {
       "title": "内容与参数",
       "description": "粘贴任意文本或 URL，支持纠错级别 L / M / Q / H",
-      "placeholder": "https://example.com"
+      "placeholder": "https://example.com",
+      "save": "保存到历史",
+      "saved": "已保存"
     },
     "options": {
       "advanced": "高级设置",
@@ -79,7 +81,7 @@
     "history": {
       "title": "历史记录",
       "description": "点击回溯，内容与参数一并还原",
-      "empty": "暂无记录，生成后会自动出现在这里",
+      "empty": "暂无记录，点击保存后出现在这里",
       "clear": "清空",
       "clearConfirm": "确定清空全部历史记录？",
       "deleteRecord": "删除记录"

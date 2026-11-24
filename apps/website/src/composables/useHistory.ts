@@ -17,7 +17,7 @@ async function refresh(): Promise<void> {
 /**
  * 二维码历史记录 composable
  *
- * - 自动保存：调用 upsert 即合并写入（同内容+同参数只更新时间，不产生重复）
+ * - 显式保存：由调用方在用户点击保存时调用 upsert（同内容+同参数只更新时间，不产生重复）
  * - records 按 updatedAt 倒序，可直接渲染
  */
 export function useHistory() {

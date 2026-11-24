@@ -54,14 +54,16 @@
   "tool": {
     "preview": {
       "title": "Rendered Result",
-      "description": "Live preview. Changes are auto-saved to history",
+      "description": "Live preview. Click save to add it to history",
       "empty": "Enter content to preview instantly",
       "clickHint": "Click the QR code to copy the image"
     },
     "editor": {
       "title": "Content & Options",
       "description": "Paste any text or URL. Error correction levels L / M / Q / H supported",
-      "placeholder": "https://example.com"
+      "placeholder": "https://example.com",
+      "save": "Save to history",
+      "saved": "Saved"
     },
     "options": {
       "advanced": "Advanced settings",
@@ -79,7 +81,7 @@
     "history": {
       "title": "History",
       "description": "Click a record to restore its content and options",
-      "empty": "No records yet. Generated codes appear here automatically",
+      "empty": "No records yet. Saved codes appear here",
       "clear": "Clear",
       "clearConfirm": "Clear all history records?",
       "deleteRecord": "Delete record"
